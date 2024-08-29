@@ -69,12 +69,7 @@ RESULT=$(curl -sS -X POST \
         "refId": "A",
         "datasourceId": 1,
         "rawQuery": true,
-        "query": "
-          from(bucket:\"'$DOCKER_INFLUXDB_INIT_BUCKET'\") 
-          |> range(start: -10s) 
-          |> filter(fn: (r) => r._measurement == \"xronos-dashboard-test\") 
-          |> aggregateWindow(every: 1s, fn: mean)
-        ",
+        "query": "from(bucket:\"'$DOCKER_INFLUXDB_INIT_BUCKET'\") |> range(start: -10s) |> filter(fn: (r) => r._measurement == \"xronos-dashboard-test\") |> aggregateWindow(every: 1s, fn: mean)",
         "queryType": "flux"
       }
     ],
@@ -83,8 +78,6 @@ RESULT=$(curl -sS -X POST \
       "to": "now"
     }
   }' | jq '[.results.A.frames[] | .schema.fields[1].labels.language as $name | .data.values | {name: $name, Time: .[0], Data: .[1]}]')
-
-
 
 # ensure that we have data for every second we have queried
 py_length=$(echo "$RESULT" | jq '.[] | select(.name == "py") | .Data | length')
