@@ -43,16 +43,10 @@ jobs:
           bash ./InfluxPublisher/tests/test_publisher_e2e.sh
 
       - name: Tear down Docker containers
-        if: always()
         run: |
           docker-compose -f docker-compose.yml down
           docker-compose -f ./InfluxPublisher/docker-compose.yml down
 
-    # Fail the job if the tests fail
-    outputs:
-      test-result: ${{ steps.e2e-test.outcome }}
-
-    if: failure()
-    steps:
       - name: Reject Merge (Tests Failed)
+        if: failure()
         run: exit 1
