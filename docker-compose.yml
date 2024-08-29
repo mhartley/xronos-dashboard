@@ -6,7 +6,7 @@ name: xronos-dashboard
 services:
   influxdb:
     image: influxdb:latest
-    pull_policy: missing
+    pull_policy: if_not_present
     container_name: influxdb
     hostname: influxdb
     networks:
@@ -28,7 +28,7 @@ services:
 
   grafana:
     image: grafana/grafana:latest
-    pull_policy: missing
+    pull_policy: if_not_present
     container_name: grafana
     hostname: grafana
     networks:
@@ -62,7 +62,7 @@ services:
 
   telegraf:
     image: telegraf:latest
-    pull_policy: missing
+    pull_policy: if_not_present
     container_name: telegraf
     hostname: telegraf
     networks:
