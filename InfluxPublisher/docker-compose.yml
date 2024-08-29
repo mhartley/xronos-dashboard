@@ -5,7 +5,7 @@ include:
 
 services:
   test-publisher-py:
-    pull_policy: missing
+    pull_policy: always
     build:
       context: ./py/src-gen/InfluxPublisher/
     container_name: test-publisher-py
@@ -24,7 +24,7 @@ services:
      - "host.docker.internal:host-gateway"
 
   test-publisher-c:
-    pull_policy: missing
+    pull_policy: always
     build:
       context: ./c/src-gen/InfluxPublisher/
     container_name: test-publisher-c
