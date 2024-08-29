@@ -21,7 +21,7 @@ jobs:
 
       - name: Build and start the environment
         run: |
-          docker-compose up --build
+          docker-compose up -d --build
 
       - name: Install Lingua Franca
         run: |
@@ -33,7 +33,7 @@ jobs:
 
       - name: Start Test Publisher containers
         run: |
-          cd InfluxPublisher; docker-compose up --build; cd ..
+          cd InfluxPublisher; docker-compose up -d --build; cd ..
 
       - name: Install jq
         run: |
