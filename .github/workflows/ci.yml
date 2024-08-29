@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - testing/e2e-w-gh-actions
+
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: Build and start the environment
+        run: |
+          docker-compose -f docker-compose.yml up -d --build
+
+      - name: Install Lingua Franca
+        run: |
+          curl -Ls https://install.lf-lang.org | bash -s cli
+
+      - name: Build the Test Publisher
+        run: |
+          bash ./InfluxPublisher/run_build.sh
+
+      - name: Start Test Publisher containers
+        run: |
+          docker-compose -f ./InfluxPublisher/docker-compose.yml up -d --build
+
+      - name: Install jq
+        run: |
+          sudo apt-get install -y jq
+
+      - name: Run E2E Tests
+        run: |
+          bash ./InfluxPublisher/tests/test_publisher_e2e.sh
+
+      - name: Tear down Docker containers
+        if: always()
+        run: |
+          docker-compose -f docker-compose.yml down
+          docker-compose -f ./InfluxPublisher/docker-compose.yml down
+
+    # Fail the job if the tests fail
+    outputs:
+      test-result: ${{ steps.e2e-test.outcome }}
+
+    if: failure()
+    steps:
+      - name: Reject Merge (Tests Failed)
+        run: exit 1
