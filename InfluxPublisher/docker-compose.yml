@@ -1,4 +1,4 @@
-name: xronos-dashboard
+# name: xronos-dashboard
 
 include:
  - ../docker-compose.yml
