@@ -28,7 +28,7 @@ jobs:
 
       - name: Build the Test Publisher
         run: |
-          bash ./InfluxPublisher/run_build.sh
+          cd InfluxPublisher; bash run_build.sh; cd ..;
 
       - name: Start Test Publisher containers
         run: |
@@ -40,7 +40,7 @@ jobs:
 
       - name: Run E2E Tests
         run: |
-          bash ./InfluxPublisher/tests/test_publisher_e2e.sh
+          cd InfluxPublisher; cd tests; bash test_publisher_e2e.sh; cd ../..
 
       - name: Tear down Docker containers
         run: |
@@ -49,4 +49,6 @@ jobs:
 
       - name: Reject Merge (Tests Failed)
         if: failure()
-        run: exit 1
+        run: |
+          echo "docker-compose version" $(docker-compose --version)
+          exit 1
