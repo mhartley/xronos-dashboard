@@ -1,7 +1,7 @@
 # name: xronos-dashboard
 
-include:
- - ../docker-compose.yml
+# include:
+#  - ../docker-compose.yml
 
 services:
   test-publisher-py:
