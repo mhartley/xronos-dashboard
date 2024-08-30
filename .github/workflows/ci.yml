@@ -19,6 +19,12 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           echo $(docker-compose --version)
 
+      - name: Install Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin' 
+          java-version: '21'
+
       - name: Build and start the environment
         run: |
           docker-compose up -d --build
