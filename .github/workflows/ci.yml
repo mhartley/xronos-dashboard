@@ -25,9 +25,9 @@ jobs:
           distribution: 'temurin' 
           java-version: '21'
 
-      - name: Build and start the environment
-        run: |
-          docker-compose up -d --build
+      # - name: Build and start the environment
+      #   run: |
+      #     docker-compose up -d --build
 
       - name: Install Lingua Franca
         run: |
@@ -37,7 +37,7 @@ jobs:
         run: |
           cd InfluxPublisher; bash run_build.sh; cd ..;
 
-      - name: Start Test Publisher containers
+      - name: Start Test Publisher environment
         run: |
           cd InfluxPublisher; docker-compose up -d --build; cd ..
 
