@@ -120,5 +120,5 @@ if [[ "$py_valid" == "true" && "$c_valid" == "true" ]]; then
 else
     echo -e "${RED}Failed the data value check, we have an unexpected drift in mean values across seconds. 
     It is possible that we are dropping some data packets. Test results: Py: $py_valid, C: $c_valid${NC}"
-    # exit 1
+  
 fi
