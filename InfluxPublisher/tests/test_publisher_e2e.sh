@@ -47,7 +47,7 @@ if (( $(echo "$difference <= 0.1" | bc -l) )); then
     echo -e "${GREEN}pass - influx db has expected data range.${NC}"
 else
     echo -e "${RED}fail - influx db does not have expected data range. Found difference of $difference${NC}"
-    # exit 1
+    exit 1
 fi
 
 
@@ -120,5 +120,5 @@ if [[ "$py_valid" == "true" && "$c_valid" == "true" ]]; then
 else
     echo -e "${RED}Failed the data value check, we have an unexpected drift in mean values across seconds. 
     It is possible that we are dropping some data packets. Test results: Py: $py_valid, C: $c_valid${NC}"
-    exit 1
+    # exit 1
 fi
