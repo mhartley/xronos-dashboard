@@ -85,7 +85,7 @@ services:
       restart_policy:
         condition: always
     healthcheck:
-      test: ["CMD-SHELL", "/usr/local/bin/telegraf_healthcheck.sh"]
+      test: ["CMD-SHELL", "curl -i -XPOST http://0.0.0.0:8186/telegraf --data-binary \"telegraf,heartbeat=healthcheck ping=true $(date +%s%N)\""]
       interval: 10s
       timeout: 5s
       retries: 5
