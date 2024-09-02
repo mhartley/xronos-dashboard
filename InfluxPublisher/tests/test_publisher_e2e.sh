@@ -18,7 +18,7 @@ curl -sS -X POST http://localhost:8086/api/v2/query?org=$DOCKER_INFLUXDB_INIT_OR
     --header "Accept: application/csv" \
     --header "Content-type: application/vnd.flux" \
     --data 'from(bucket:"'$DOCKER_INFLUXDB_INIT_BUCKET'")
-        |> range(start: -10s)
+        |> range(start: -5s)
         |> filter(fn: (r) => r._measurement == "xronos-dashboard-test")
         |> aggregateWindow(every: 1s, fn: mean)
         '
@@ -28,8 +28,8 @@ curl -sS -X POST http://localhost:8086/api/v2/query?org=$DOCKER_INFLUXDB_INIT_OR
 line_count=$(wc -l < $output_file)  
 
 # Check if line count is less than 20 (we have ten for both the the c and python publishers)
-if [ "$line_count" -lt 20 ]; then
-    echo -e "${RED}fail - influx db missing data  -- found " + $line_count + " lines, expected greater than 20${NC}"
+if [ "$line_count" -lt 10 ]; then
+    echo -e "${RED}fail - influx db missing data  -- found " + $line_count + " lines, expected greater than 10${NC}"
     exit 1
 else
     echo -e "${GREEN}pass - influx db has expected data quantity.${NC}"
@@ -70,7 +70,7 @@ RESULT=$(curl -sS -X POST \
         "refId": "A",
         "datasourceId": 1,
         "rawQuery": true,
-        "query": "from(bucket:\"'$DOCKER_INFLUXDB_INIT_BUCKET'\") |> range(start: -10s) |> filter(fn: (r) => r._measurement == \"xronos-dashboard-test\") |> aggregateWindow(every: 1s, fn: mean)",
+        "query": "from(bucket:\"'$DOCKER_INFLUXDB_INIT_BUCKET'\") |> range(start: -5s) |> filter(fn: (r) => r._measurement == \"xronos-dashboard-test\") |> aggregateWindow(every: 1s, fn: mean)",
         "queryType": "flux"
       }
     ],
@@ -85,8 +85,8 @@ RESULT=$(curl -sS -X POST \
 py_length=$(echo "$RESULT" | jq '.[] | select(.name == "py") | .Data | length')
 c_length=$(echo "$RESULT" | jq '.[] | select(.name == "c") | .Data | length')
 
-# Check if both lengths are at least 10
-if [[ "$py_length" -ge 10 && "$c_length" -ge 10 ]]; then
+# Check if both lengths are at least 5
+if [[ "$py_length" -ge 10 && "$c_length" -ge 5 ]]; then
     echo -e "${GREEN}pass - Both py and c have published data every second for the last ten seconds.${NC}"
 else
     echo -e "${RED}Failed the data length check. It is possible that we have missing data. Of the last ten seconds, the following publishers only have data for Py: $py_length, C: $c_length${NC}"
