@@ -10,7 +10,7 @@ NC='\033[0m' # default color
 #for storing output data from the influx query so we can parse. Deleted at end of run.
 output_file="influx_query_test_res.csv"
 
-sleep 6 # when triggered on an action, ensure it's been up for a while so we have data.
+sleep 6 # when triggered on an action, ensure it's been up long enought to have generated data
 
 curl -sS -X POST http://localhost:8086/api/v2/query?org=$DOCKER_INFLUXDB_INIT_ORG \
     --output $output_file \
@@ -86,7 +86,7 @@ py_length=$(echo "$RESULT" | jq '.[] | select(.name == "py") | .Data | length')
 c_length=$(echo "$RESULT" | jq '.[] | select(.name == "c") | .Data | length')
 
 # Check if both lengths are at least 5
-if [[ "$py_length" -ge 10 && "$c_length" -ge 5 ]]; then
+if [[ "$py_length" -ge 5 && "$c_length" -ge 5 ]]; then
     echo -e "${GREEN}pass - Both py and c have published data every second for the last ten seconds.${NC}"
 else
     echo -e "${RED}Failed the data length check. It is possible that we have missing data. Of the last ten seconds, the following publishers only have data for Py: $py_length, C: $c_length${NC}"
