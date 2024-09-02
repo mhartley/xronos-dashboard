@@ -3,6 +3,8 @@
 # include:
 #  - ../docker-compose.yml
 
+#
+
 services:
   test-publisher-py:
     pull_policy: always
