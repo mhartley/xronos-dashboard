@@ -79,6 +79,7 @@ RESULT=$(curl -sS -X POST \
     }
   }' | jq '[.results.A.frames[] | .schema.fields[1].labels.language as $name | .data.values | {name: $name, Time: .[0], Data: .[1]}]')
 
+
 # ensure that we have data for every second we have queried
 py_length=$(echo "$RESULT" | jq '.[] | select(.name == "py") | .Data | length')
 c_length=$(echo "$RESULT" | jq '.[] | select(.name == "c") | .Data | length')
@@ -92,6 +93,7 @@ else
 fi
 
 
+echo $RESULT
 
 # Define a small tolerance for checking approximate equality
 tolerance=0.01
