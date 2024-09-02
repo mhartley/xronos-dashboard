@@ -25,9 +25,9 @@ jobs:
           distribution: 'temurin' 
           java-version: '21'
 
-      - name: Build and start the environment
-        run: |
-          docker-compose up -d --build
+      # - name: Build and start the environment
+      #   run: |
+      #     docker-compose up -d --build
 
       - name: Install Lingua Franca
         run: |
