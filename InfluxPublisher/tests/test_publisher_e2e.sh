@@ -11,7 +11,7 @@ NC='\033[0m' # default color
 #for storing output data from the influx query so we can parse. Deleted at end of run.
 output_file="influx_query_test_res.csv"
 
-# sleep 6 # when triggered on an action, ensure it's been up long enought to have generated data
+sleep 6 # when triggered on an action, ensure it's been up long enought to have generated data
 
 curl -sS -X POST http://localhost:8086/api/v2/query?org=$DOCKER_INFLUXDB_INIT_ORG \
     --output $output_file \
