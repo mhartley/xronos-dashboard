@@ -1,6 +1,7 @@
 
 # load the influx db variables
 source ../../influxdb/influx.env
+# 
 
 # Define color codes
 GREEN='\033[0;32m'
@@ -10,7 +11,7 @@ NC='\033[0m' # default color
 #for storing output data from the influx query so we can parse. Deleted at end of run.
 output_file="influx_query_test_res.csv"
 
-sleep 6 # when triggered on an action, ensure it's been up long enought to have generated data
+# sleep 6 # when triggered on an action, ensure it's been up long enought to have generated data
 
 curl -sS -X POST http://localhost:8086/api/v2/query?org=$DOCKER_INFLUXDB_INIT_ORG \
     --output $output_file \
@@ -93,25 +94,22 @@ else
     exit 1
 fi
 
-
-echo $RESULT
-
 # Define a small tolerance for checking approximate equality
 tolerance=0.01
 
 # the averages of any points besides the first and last should be approximately equal if things are working correctly. We compare the absolute value of the mean of seconds 1 and 2 to ensure data is streaming. correctly.
 py_valid=$(echo "$RESULT" | jq --argjson tol "$tolerance" '
   .[] | select(.name == "py") | .Data as $data |
-  ($data[1] >= -1 and $data[1] <= 1) and
-  ($data[2] >= -1 and $data[2] <= 1) and
-  ((($data[2] | abs) - ($data[1] | abs))  <= $tol)
+  ($data[3] >= -1 and $data[3] <= 1) and
+  ($data[4] >= -1 and $data[4] <= 1) and
+  ((($data[3] | abs) - ($data[4] | abs))  <= $tol)
 ')
 
 c_valid=$(echo "$RESULT" | jq --argjson tol "$tolerance" '
   .[] | select(.name == "c") | .Data as $data |
-  ($data[1] >= -1 and $data[1] <= 1) and
-  ($data[2] >= -1 and $data[2] <= 1) and
-  ((($data[2] | abs) - ($data[1] | abs))  <= $tol)
+  ($data[3] >= -1 and $data[3] <= 1) and
+  ($data[4] >= -1 and $data[4] <= 1) and
+  ((($data[3] | abs) - ($data[4] | abs))  <= $tol)
 ')
 
 # Validate the results
