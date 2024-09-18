@@ -97,22 +97,20 @@ fi
 # Define a small tolerance for checking approximate equality
 tolerance=0.01
 
-echo $RESULT
-
 # the averages of any points besides the first and last should be approximately equal if things are working correctly. We compare the absolute value of the mean of seconds 3 and 4 to ensure data is streaming correctly.
 py_valid=$(echo "$RESULT" | jq --argjson tol "$tolerance" '
   def abs(x): if x < 0 then -x else x end;
   .[] | select(.name == "py") | .Data as $data |
-  ($data[3] >= -1 and $data[3] <= 1) and
-  ($data[4] >= -1 and $data[4] <= 1) and
+  (abs($data[3]) <= 1) and
+  (abs($data[4]) <= 1) and
   ((abs($data[3]) - abs($data[4]))  <= $tol)
 ')
 
 c_valid=$(echo "$RESULT" | jq --argjson tol "$tolerance" '
   def abs(x): if x < 0 then -x else x end;
   .[] | select(.name == "c") | .Data as $data |
-  ($data[3] >= -1 and $data[3] <= 1) and
-  ($data[4] >= -1 and $data[4] <= 1) and
+  (abs($data[3]) <= 1) and
+  (abs($data[4]) <= 1) and
   ((abs($data[3]) - abs($data[4]))  <= $tol)
 ')
 
@@ -122,5 +120,6 @@ if [[ "$py_valid" == "true" && "$c_valid" == "true" ]]; then
 else
     echo -e "${RED}Failed the data value check, we have an unexpected drift in mean values across seconds. 
     It is possible that we are dropping some data packets. Test results: Py: $py_valid, C: $c_valid${NC}"
+    exit 1
   
 fi
