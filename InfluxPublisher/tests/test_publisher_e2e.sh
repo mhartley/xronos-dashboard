@@ -97,6 +97,8 @@ fi
 # Define a small tolerance for checking approximate equality
 tolerance=0.01
 
+echo $RESULT
+
 # the averages of any points besides the first and last should be approximately equal if things are working correctly. We compare the absolute value of the mean of seconds 1 and 2 to ensure data is streaming. correctly.
 py_valid=$(echo "$RESULT" | jq --argjson tol "$tolerance" '
   .[] | select(.name == "py") | .Data as $data |
