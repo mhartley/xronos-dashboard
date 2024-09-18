@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - testing/e2e-merge-cand
 
 jobs:
   e2e-test:
